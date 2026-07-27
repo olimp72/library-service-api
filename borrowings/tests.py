@@ -5,14 +5,16 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 from books.models import Book
-from borrowings.models import Borrowing
 
 BORROWINGS_URL = reverse("borrowings:borrowing-list")
+
 
 class BorrowingsApiTests(TestCase):
     def setUp(self):
         self.client = APIClient()
-        self.user = get_user_model().objects.create_user("user@example.com", "password123")
+        self.user = get_user_model().objects.create_user(
+            "user@example.com", "password123"
+        )
         self.book = Book.objects.create(
             title="Test Book",
             author="Test Author",
