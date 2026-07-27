@@ -7,11 +7,16 @@ from books.models import Book
 
 BOOKS_URL = reverse("books:book-list")
 
+
 class BooksApiTests(TestCase):
     def setUp(self):
         self.client = APIClient()
-        self.user = get_user_model().objects.create_user("user@example.com", "password123")
-        self.admin = get_user_model().objects.create_superuser("admin@example.com", "password123")
+        self.user = get_user_model().objects.create_user(
+            "user@example.com", "password123"
+        )
+        self.admin = get_user_model().objects.create_superuser(
+            "admin@example.com", "password123"
+        )
         self.book = Book.objects.create(
             title="Clean Code",
             author="Robert C. Martin",

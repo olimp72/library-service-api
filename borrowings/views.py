@@ -8,7 +8,13 @@ from rest_framework.response import Response
 from borrowings.models import Borrowing
 from borrowings.serializers import BorrowingSerializer, BorrowingCreateSerializer
 
-class BorrowingViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.CreateModelMixin, viewsets.GenericViewSet):
+
+class BorrowingViewSet(
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.CreateModelMixin,
+    viewsets.GenericViewSet,
+):
     queryset = Borrowing.objects.select_related("book", "user")
     permission_classes = (IsAuthenticated,)
 
@@ -28,7 +34,9 @@ class BorrowingViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.
         user_id = self.request.query_params.get("user_id")
 
         if is_active is not None:
-            queryset = queryset.filter(actual_return_date__isnull=(is_active.lower() == "true"))
+            queryset = queryset.filter(
+                actual_return_date__isnull=(is_active.lower() == "true")
+            )
 
         if user.is_staff and user_id:
             queryset = queryset.filter(user_id=user_id)
@@ -47,7 +55,10 @@ class BorrowingViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.
         borrowing = self.get_object()
 
         if borrowing.actual_return_date:
-            return Response({"error": "This borrowing has already been returned."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"error": "This borrowing has already been returned."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         borrowing.actual_return_date = date.today()
         borrowing.save()
@@ -55,4 +66,6 @@ class BorrowingViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.
         borrowing.book.inventory += 1
         borrowing.book.save()
 
-        return Response({"message": "Borrowing returned successfully."}, status=status.HTTP_200_OK)
+        return Response(
+            {"message": "Borrowing returned successfully."}, status=status.HTTP_200_OK
+        )

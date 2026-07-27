@@ -6,6 +6,7 @@ from rest_framework.test import APIClient
 
 USER_URL = reverse("users:create")
 
+
 class UserModelTests(TestCase):
     def test_create_user_with_email_successful(self):
         email = "test@example.com"
@@ -15,9 +16,12 @@ class UserModelTests(TestCase):
         self.assertTrue(user.check_password(password))
 
     def test_create_superuser(self):
-        user = get_user_model().objects.create_superuser("admin@example.com", "adminpass")
+        user = get_user_model().objects.create_superuser(
+            "admin@example.com", "adminpass"
+        )
         self.assertTrue(user.is_staff)
         self.assertTrue(user.is_superuser)
+
 
 class UserApiTests(TestCase):
     def setUp(self):
